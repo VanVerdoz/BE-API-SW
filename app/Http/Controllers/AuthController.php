@@ -1,35 +1,13 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Pengguna;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    // 🧾 Register pengguna baru
-    public function register(Request $request)
-    {
-        $validated = $request->validate([
-            'username' => 'required|unique:pengguna',
-            'password' => 'required|min:6',
-            'nama_lengkap' => 'required',
-            'role' => 'required',
-            'status' => 'required',
-        ]);
-
-        $validated['password'] = Hash::make($validated['password']);
-
-        $pengguna = Pengguna::create($validated);
-
-        return response()->json([
-            'message' => 'Registrasi berhasil',
-            'data' => $pengguna
-        ], 201);
-    }
-
-    // 🔐 Login pengguna
+    // LOGIN
     public function login(Request $request)
     {
         $request->validate([
@@ -37,40 +15,57 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        $pengguna = Pengguna::where('username', $request->username)->first();
+        $credentials = $request->only('username', 'password');
 
-        if (!$pengguna || !Hash::check($request->password, $pengguna->password)) {
-            throw ValidationException::withMessages([
-                'username' => ['Username atau password salah.'],
-            ]);
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json([
+                'message' => 'Username atau password salah'
+            ], 401);
         }
 
-        // buat token sanctum
-        $token = $pengguna->createToken('auth_token')->plainTextToken;
+        $pengguna = auth()->user();
+
+        // Durasi 1 hari
+        $cookie = cookie(
+            'jwt_token',
+            $token,
+            60 * 24,   // menit
+            '/',
+            null,
+            false,
+            true
+        );
 
         return response()->json([
             'message' => 'Login berhasil',
-            'token' => $token,
             'data' => [
                 'id' => $pengguna->id,
                 'nama_lengkap' => $pengguna->nama_lengkap,
                 'role' => $pengguna->role,
                 'status' => $pengguna->status,
             ]
-        ]);
+        ])->withCookie($cookie);
     }
 
-    // 🚪 Logout pengguna
-    public function logout(Request $request)
+    // LOGOUT: hapus cookie
+    public function logout()
     {
-        $request->user()->tokens()->delete();
+        try {
+            auth()->logout();
+        } catch (\Exception $e) {
+            // abaikan error jika token tidak valid
+        }
 
-        return response()->json(['message' => 'Logout berhasil']);
+        // HAPUS cookie jwt_token
+        $deleteCookie = cookie()->forget('jwt_token');
+
+        return response()->json(['message' => 'Logout berhasil'])
+            ->withCookie($deleteCookie);
     }
 
-    // 👤 Profil pengguna login
-    public function profile(Request $request)
+    // GET PROFILE
+    public function profile()
     {
-        return response()->json($request->user());
+        return response()->json(auth()->user());
     }
 }

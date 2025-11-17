@@ -13,10 +13,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cabang', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigInteger('id')->primary();
             $table->string('nama_cabang', 100);
             $table->text('alamat')->nullable();
-            $table->string('telepon', 20)->nullable();
             $table->timestamp('created_at')->nullable()->useCurrent();
         });
         DB::statement("alter table \"cabang\" add column \"status\" status_enum null default 'aktif'");

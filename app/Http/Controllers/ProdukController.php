@@ -8,12 +8,17 @@ use Illuminate\Http\Request;
 class ProdukController extends Controller
 {
 public function index()
-{
-    return response()->json([
-        'message' => 'Daftar produk',
-        'data' => Produk::all()
-    ]);
-}
+    {
+        $produk = Produk::all()->map(function ($item) {
+            $item->harga_format = 'Rp. ' . number_format($item->harga, 0, ',', '.');
+            return $item;
+        });
+
+        return response()->json([
+            'message' => 'Daftar produk',
+            'data' => $produk
+        ]);
+    }
 public function store(Request $request)
 {
     $request->validate([
@@ -21,9 +26,11 @@ public function store(Request $request)
         'harga' => 'required|integer',
         'kategori' => 'required',
         'status' => 'required',
+        'deskripsi' => 'nullable|string'
     ]);
 
     $produk = Produk::create($request->all());
+    $produk->harga_format = 'Rp. ' . number_format($produk->harga, 0, ',', '.');
 
     return response()->json([
         'message' => 'Produk berhasil dibuat',
@@ -35,6 +42,7 @@ public function update(Request $request, $id)
     $produk = Produk::findOrFail($id);
 
     $produk->update($request->all());
+    $produk->harga_format = 'Rp. ' . number_format($produk->harga, 0, ',', '.');
 
     return response()->json([
         'message' => 'Produk berhasil diperbarui',

@@ -13,8 +13,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('closing_harian', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('cabang_id');
+            $table->bigInteger('id');
+            $table->unsignedbigInteger('cabang_id');
             $table->unsignedBigInteger('pengguna_id');
             $table->date('tanggal');
             $table->decimal('total_penjualan', 12)->nullable();

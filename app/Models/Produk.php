@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 class Produk extends Model
 {
     public $timestamps = false;
+    public $incrementing = false;      // WAJIB! karena ID diisi manual
+    protected $keyType = 'string';
 
     protected $table = 'produk';
 
@@ -13,7 +15,8 @@ class Produk extends Model
         'nama_produk',
         'harga',
         'kategori',
-        'status'
+        'status',
+        'deskripsi'
     ];
 
     protected static function boot()

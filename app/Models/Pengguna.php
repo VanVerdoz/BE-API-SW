@@ -1,15 +1,13 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable; // penting untuk auth
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class Pengguna extends Authenticatable
+class Pengguna extends Authenticatable implements JWTSubject
 {
-    use HasApiTokens, HasFactory;
     public $timestamps = false;
-
     protected $table = 'pengguna';
 
     protected $fillable = [
@@ -20,7 +18,14 @@ class Pengguna extends Authenticatable
         'status',
     ];
 
-    protected $hidden = [
-        'password',
-    ];
+    // === Wajib untuk JWT ===
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

@@ -8,8 +8,15 @@ use Illuminate\Support\Facades\Hash;
 
 class PenggunaController extends Controller
 {
+    // === CREATE USER (hanya ADMIN) ===
     public function store(Request $request)
     {
+        if ($request->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Akses ditolak. Hanya admin yang boleh membuat pengguna.'
+            ], 403);
+        }
+
         $request->validate([
             'username' => 'required|unique:pengguna',
             'password' => 'required|min:6',
@@ -28,27 +35,36 @@ class PenggunaController extends Controller
             'data' => $pengguna
         ], 201);
     }
-            public function index(Request $request)
-        {
-            // cek role si user yang login
-            if ($request->user()->role !== 'owner') {
-                return response()->json([
-                    'message' => 'Akses ditolak. Hanya owner yang boleh melihat data pengguna.'
-                ], 403);
-            }
 
-            // ambil semua pengguna
-            $pengguna = Pengguna::all();
-
+    // === LIST USER (ADMIN & OWNER) ===
+    public function index(Request $request)
+    {
+        if (!in_array($request->user()->role, ['admin', 'owner'])) {
             return response()->json([
-                'message' => 'Daftar pengguna',
-                'data' => $pengguna
-            ]);
+                'message' => 'Akses ditolak. Hanya admin dan owner yang boleh melihat data pengguna.'
+            ], 403);
         }
 
+        return response()->json([
+            'message' => 'Daftar pengguna',
+            'data' => Pengguna::all()
+        ]);
+    }
+
+    // === UPDATE USER (hanya ADMIN) ===
     public function update(Request $request, $id)
     {
+        if ($request->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Akses ditolak. Hanya admin yang boleh memperbarui pengguna.'
+            ], 403);
+        }
+
         $pengguna = Pengguna::findOrFail($id);
+
+        if ($request->password) {
+            $request['password'] = Hash::make($request->password);
+        }
 
         $pengguna->update($request->all());
 
@@ -58,11 +74,17 @@ class PenggunaController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    // === DELETE USER (hanya ADMIN) ===
+    public function destroy(Request $request, $id)
     {
+        if ($request->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Akses ditolak. Hanya admin yang boleh menghapus pengguna.'
+            ], 403);
+        }
+
         Pengguna::destroy($id);
 
         return response()->json(['message' => 'Pengguna dihapus']);
     }
-
 }

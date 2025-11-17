@@ -17,15 +17,32 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'role' => \App\Http\Middleware\RoleMiddleware::class,
+
+         // JWT
+            'jwt' => \App\Http\Middleware\JwtMiddleware::class, // middleware kamu sendiri
+            'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
+            'jwt.cookie' => \App\Http\Middleware\JWTFromCookie::class,
+            'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
+
+            
         ]);
 
-        // Disable middleware WEB (session, cookies)
-        // Tambahkan SANCTUM STATEFUL middleware ke grup web
-        $middleware->web(append: [
-            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-         ]);
+        // WEB GROUP (NO SANCTUM)
+        $middleware->group('web', [
+            \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
 
-        // Disable Laravel login redirect
+        // API GROUP (NO SANCTUM)
+        $middleware->group('api', [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+
+        // Disable redirect to login page
         $middleware->redirectUsersTo(fn() => null);
         $middleware->redirectGuestsTo(fn() => null);
     })

@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('stok', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('cabang_id')->nullable();
-            $table->integer('produk_id')->nullable();
+            $table->bigIncrements('id');
+            $table->biginteger('cabang_id');
+            $table->biginteger('produk_id');
             $table->decimal('jumlah', 10)->nullable()->default(0);
             $table->timestamp('updated_at')->nullable()->useCurrent();
         });
