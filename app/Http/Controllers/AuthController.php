@@ -7,6 +7,30 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
+    //REGISTER
+    public function register(Request $request)
+{
+    $validated = $request->validate([
+        'username' => 'required|unique:pengguna,username',
+        'password' => 'required|min:6',
+        'nama_lengkap' => 'required|string',
+        'role'     => 'required|string',
+    ]);
+
+    $user = \App\Models\Pengguna::create([
+        'username'     => $validated['username'],
+        'password'     => \Illuminate\Support\Facades\Hash::make($validated['password']),
+        'nama_lengkap' => $validated['nama_lengkap'],
+        'role'         => $validated['role'],
+    ]);
+
+    return response()->json([
+        'message' => 'User berhasil dibuat',
+        'data'    => $user
+    ]);
+}
+
     // LOGIN
     public function login(Request $request)
     {
@@ -42,7 +66,6 @@ class AuthController extends Controller
                 'id' => $pengguna->id,
                 'nama_lengkap' => $pengguna->nama_lengkap,
                 'role' => $pengguna->role,
-                'status' => $pengguna->status,
             ]
         ])->withCookie($cookie);
     }
@@ -63,9 +86,5 @@ class AuthController extends Controller
             ->withCookie($deleteCookie);
     }
 
-    // GET PROFILE
-    public function profile()
-    {
-        return response()->json(auth()->user());
-    }
+    
 }

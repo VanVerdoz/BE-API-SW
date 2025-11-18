@@ -24,9 +24,8 @@ class ClosingHarianController extends Controller
     {
         $request->validate([
             'cabang_id' => 'required|integer',
-            'pengguna_id' => 'required|integer',
+            'pengguna_id' => 'required|string|exists:pengguna,id',
             'tanggal' => 'required|date',
-            'status' => 'required|string',
         ]);
 
         // Hitung total penjualan otomatis
@@ -35,7 +34,7 @@ class ClosingHarianController extends Controller
               ->whereDate('tanggal', $request->tanggal);
         })->sum('subtotal');
 
-        // Hitung stok akhir otomatis dari tabel stok
+        // Hitung stok akhir otomatis
         $stokAkhir = $this->hitungTotalStok($request->tanggal, $request->cabang_id);
 
         $closing = ClosingHarian::create([
@@ -44,7 +43,6 @@ class ClosingHarianController extends Controller
             'tanggal' => $request->tanggal,
             'total_penjualan' => $totalPenjualan,
             'stok_akhir' => $stokAkhir,
-            'status' => $request->status,
             'created_at' => Carbon::now(),
         ]);
 
@@ -54,7 +52,7 @@ class ClosingHarianController extends Controller
         ]);
     }
 
-    // PUT - Update closing
+    // PUT - Update closing (tidak ada status lagi)
     public function update(Request $request, $id)
     {
         $closing = ClosingHarian::find($id);
@@ -63,16 +61,8 @@ class ClosingHarianController extends Controller
             return response()->json(['message' => 'Closing tidak ditemukan'], 404);
         }
 
-        $request->validate([
-            'status' => 'string',
-        ]);
-
-        $closing->update([
-            'status' => $request->status ?? $closing->status,
-        ]);
-
         return response()->json([
-            'message' => 'Closing harian diperbarui',
+            'message' => 'Tidak ada kolom yang dapat diperbarui (status sudah dihapus)',
             'data' => $closing
         ]);
     }
@@ -95,16 +85,13 @@ class ClosingHarianController extends Controller
     // LOGIC STOK
     // ================================================
 
-    // Hitung stok per produk
     private function hitungStokPerProduk($produkId, $tanggal, $cabangId)
     {
-        // Stok awal berdasarkan tabel stok
         $stokAwal = DB::table('stok')
             ->where('produk_id', $produkId)
             ->where('cabang_id', $cabangId)
             ->value('jumlah') ?? 0;
 
-        // Hitung jumlah terjual
         $jumlahTerjual = DetailPenjualan::where('produk_id', $produkId)
             ->whereHas('penjualan', function ($q) use ($tanggal, $cabangId) {
                 $q->whereDate('tanggal', $tanggal)
@@ -115,12 +102,10 @@ class ClosingHarianController extends Controller
         return max($stokAwal - $jumlahTerjual, 0);
     }
 
-    // Hitung total stok semua produk per cabang
     private function hitungTotalStok($tanggal, $cabangId)
     {
         $total = 0;
 
-        // Ambil semua produk yg ada stok-nya
         $produkList = DB::table('stok')
             ->where('cabang_id', $cabangId)
             ->pluck('produk_id');

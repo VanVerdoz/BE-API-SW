@@ -22,7 +22,6 @@ class PenggunaController extends Controller
             'password' => 'required|min:6',
             'nama_lengkap' => 'required',
             'role' => 'required',
-            'status' => 'required',
         ]);
 
         $data = $request->all();

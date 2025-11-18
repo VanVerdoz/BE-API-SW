@@ -23,7 +23,7 @@ class PenjualanController extends Controller
     {
         $request->validate([
             'cabang_id' => 'required|integer',
-            'pengguna_id' => 'required|integer',
+            'pengguna_id' => 'required|string',
             'tanggal' => 'required|date',
             'total' => 'required|numeric',
             'metode_pembayaran' => 'required|string',
@@ -89,7 +89,7 @@ class PenjualanController extends Controller
     // Validasi input
     $request->validate([
         'cabang_id' => 'integer|exists:cabang,id',
-        'pengguna_id' => 'integer|exists:pengguna,id',
+        'pengguna_id' => 'required|string',
         'tanggal' => 'date',
         'total' => 'numeric',
         'metode_pembayaran' => 'string|max:50',

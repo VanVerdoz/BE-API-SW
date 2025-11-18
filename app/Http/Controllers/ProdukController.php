@@ -25,7 +25,6 @@ public function store(Request $request)
         'nama_produk' => 'required',
         'harga' => 'required|integer',
         'kategori' => 'required',
-        'status' => 'required',
         'deskripsi' => 'nullable|string'
     ]);
 
