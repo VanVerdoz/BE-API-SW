@@ -11,10 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('produk', function (Blueprint $table) {
-            $table->text('deskripsi')->nullable();
-            //
-        });
+        // Kolom "deskripsi" sekarang sudah didefinisikan di migration
+        // create_produk_table. Agar migrate:fresh tidak error karena
+        // duplikat kolom, kita cek dulu apakah kolom ini sudah ada.
+        if (!Schema::hasColumn('produk', 'deskripsi')) {
+            Schema::table('produk', function (Blueprint $table) {
+                $table->text('deskripsi')->nullable();
+            });
+        }
     }
 
     /**
@@ -22,9 +26,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('produk', function (Blueprint $table) {
-            $table->dropColumn('deskripsi');
-            //
-        });
+        // Hanya drop kolom jika memang ada, supaya aman saat rollback.
+        if (Schema::hasColumn('produk', 'deskripsi')) {
+            Schema::table('produk', function (Blueprint $table) {
+                $table->dropColumn('deskripsi');
+            });
+        }
     }
 };

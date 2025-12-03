@@ -1,16 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PenggunaController;
-use App\Http\Controllers\ProdukController;
-use App\Http\Controllers\CabangController;
-use App\Http\Controllers\StokController;
-use App\Http\Controllers\PenjualanController;
-use App\Http\Controllers\DetailPenjualanController;
-use App\Http\Controllers\ClosingHarianController;
-use App\Http\Controllers\LaporanKeuanganController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\PenggunaController;
+use App\Http\Controllers\Api\ProdukController;
+use App\Http\Controllers\Api\CabangController;
+use App\Http\Controllers\Api\StokController;
+use App\Http\Controllers\Api\PenjualanController;
+use App\Http\Controllers\Api\DetailPenjualanController;
+use App\Http\Controllers\Api\ClosingHarianController;
+use App\Http\Controllers\Api\LaporanKeuanganController;
 
 
 
@@ -38,13 +38,13 @@ Route::middleware(['jwt.cookie', 'jwt.auth'])->group(function () {
 
 
     // ==================== PENGGUNA ====================
+    // ==================== PENGGUNA ====================
     Route::get('/role', [PenggunaController::class, 'index']);
-    Route::middleware('role:owner,admin')->group(function () {
-        Route::post('/role', [PenggunaController::class, 'store']);
-        Route::put('/role/{id}', [PenggunaController::class, 'update']);
-        Route::patch('/role/{id}/status', [PenggunaController::class, 'updateStatus']);
-        Route::delete('/role/{id}', [PenggunaController::class, 'destroy']);
-    });
+    Route::post('/role', [PenggunaController::class, 'store']);
+    Route::put('/role/{id}', [PenggunaController::class, 'update']);
+    Route::patch('/role/{id}/status', [PenggunaController::class, 'updateStatus']);
+    Route::delete('/role/{id}', [PenggunaController::class, 'destroy']);
+
 
 
     // ==================== PRODUK ====================
@@ -60,7 +60,7 @@ Route::middleware(['jwt.cookie', 'jwt.auth'])->group(function () {
 
 
     // ==================== CABANG ====================
-    Route::middleware('role:owner,raider,kepala_gudang')->group(function () {
+    Route::middleware('role:owner,raider,kepala_gudang,admin')->group(function () {
         Route::get('/cabang/{id}', [CabangController::class, 'show']);
     });
     Route::middleware('role:admin')->group(function () {

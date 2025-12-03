@@ -16,8 +16,21 @@ class Penjualan extends Model
         'tanggal',
         'total',
         'metode_pembayaran',
-        'keterangan'
+        'keterangan',
+        'dibuat_oleh'
     ];
+
+    // Accessor untuk total_harga (karena di database kolom 'total')
+    public function getTotalHargaAttribute()
+    {
+        return $this->total;
+    }
+
+    // Mutator untuk total_harga
+    public function setTotalHargaAttribute($value)
+    {
+        $this->attributes['total'] = $value;
+    }
 
     public function cabang()
     {

@@ -12,6 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->append(\Illuminate\Http\Middleware\HandleCors::class);
 
         // Alias middleware
         $middleware->alias([
@@ -19,12 +20,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \App\Http\Middleware\RoleMiddleware::class,
 
          // JWT
-            'jwt' => \App\Http\Middleware\JwtMiddleware::class, // middleware kamu sendiri
+            'jwt' => \App\Http\Middleware\JwtMiddleware::class,
             'jwt.refresh' => \Tymon\JWTAuth\Http\Middleware\RefreshToken::class,
             'jwt.cookie' => \App\Http\Middleware\JWTFromCookie::class,
             'jwt.auth' => \Tymon\JWTAuth\Http\Middleware\Authenticate::class,
 
-            
+         // Web Auth
+            'web.auth' => \App\Http\Middleware\WebAuthMiddleware::class,
+
         ]);
 
         // WEB GROUP (NO SANCTUM)

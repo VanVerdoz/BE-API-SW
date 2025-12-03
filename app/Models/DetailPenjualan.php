@@ -13,8 +13,7 @@ class DetailPenjualan extends Model
         'penjualan_id',
         'produk_id',
         'jumlah',
-        'harga',
-        'subtotal'
+        'harga'
     ];
 
     // Relasi ke tabel penjualan (Wajib ada)

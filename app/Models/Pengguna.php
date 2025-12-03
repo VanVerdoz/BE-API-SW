@@ -10,10 +10,8 @@ class Pengguna extends Authenticatable implements JWTSubject
     public $timestamps = false;
     protected $table = 'pengguna';
 
-    // === ID CUSTOM ===
-    protected $primaryKey = 'id';
-    public $incrementing = false;     // TIDAK autoincrement
-    protected $keyType = 'string';    // ID berupa string
+    // Pakai ID integer auto-increment standar Laravel (sesuai migration `$table->id()`)
+    // -> tidak perlu override primaryKey / incrementing / keyType di sini.
 
     protected $fillable = [
         'username',
@@ -23,21 +21,33 @@ class Pengguna extends Authenticatable implements JWTSubject
         'status',
     ];
 
-    // === AUTO GENERATE ID ===
     protected static function boot()
     {
         parent::boot();
 
-        static::creating(function ($model) {
+        static::creating(function (Pengguna $user) {
+            $username = strtolower($user->username ?? '');
 
-            // Ambil 3 huruf pertama dari nama lengkap
-            $prefix = strtoupper(substr($model->nama_lengkap, 0, 3));
+            $crc = sprintf('%u', crc32($username));
+            $digits = preg_replace('/\D/', '', $crc);
+            $prefixStr = substr(str_pad($digits, 5, '0', STR_PAD_LEFT), 0, 5);
+            $prefix = (int) $prefixStr;
 
-            // Timestamp: YYYYMMDDHHMMSS
-            $timestamp = now()->format('YmdHis');
+            $min = $prefix * 1000;
+            $max = $min + 999;
 
-            // Set ID
-            $model->id = $prefix . $timestamp;
+            $lastId = Pengguna::whereBetween('id', [$min, $max])->max('id');
+            if ($lastId) {
+                $suffix = ($lastId - $min) + 1;
+            } else {
+                $suffix = 1;
+            }
+
+            if ($suffix > 999) {
+                throw new \RuntimeException('Kapasitas ID untuk prefix ini sudah penuh');
+            }
+
+            $user->id = $min + $suffix;
         });
     }
 
