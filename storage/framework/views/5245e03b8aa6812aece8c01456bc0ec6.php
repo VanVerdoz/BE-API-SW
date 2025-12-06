@@ -11,7 +11,7 @@
 
     .page-title {
         font-size: 28px;
-        color: #333;
+        color: var(--text);
         font-weight: 600;
     }
 
@@ -49,11 +49,16 @@
     }
 
     .form-container {
-        background: white;
+        background: var(--surface);
         padding: 30px;
         border-radius: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        max-width: 600px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        color: var(--text);
+        max-width: 100%;
+        width: 100%;
+        min-height: calc(100vh - 160px);
+        padding-bottom: 160px;
     }
 
     .form-group {
@@ -64,7 +69,7 @@
         display: block;
         font-size: 14px;
         font-weight: 500;
-        color: #333;
+        color: var(--text);
         margin-bottom: 8px;
     }
 
@@ -75,16 +80,18 @@
     .form-control {
         width: 100%;
         padding: 12px 15px;
-        border: 2px solid #e0e0e0;
+        border: 1px solid var(--border);
         border-radius: 10px;
         font-size: 14px;
         transition: all 0.3s;
+        background: var(--surface);
+        color: var(--text);
     }
 
     .form-control:focus {
         outline: none;
-        border-color: #ff6b35;
-        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
     }
 
     .form-control.error {
@@ -103,8 +110,13 @@
         margin-top: 30px;
     }
 
-    select.form-control {
-        cursor: pointer;
+    select.form-control { cursor: pointer; }
+
+    @media (max-width: 768px) {
+        .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .form-actions { flex-direction: column; gap: 8px; }
+        .form-actions .btn { display: block; width: 100%; }
+        .form-container { padding: 20px; border-radius: 16px; min-height: auto; padding-bottom: 80px; }
     }
 
     .form-hint {
@@ -274,6 +286,5 @@ unset($__errorArgs, $__bag); ?>
     </form>
 </div>
 <?php $__env->stopSection(); ?>
-
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\RplBo\Be FIx\resources\views/pengguna/edit.blade.php ENDPATH**/ ?>

@@ -131,6 +131,28 @@
         height: 420px;
     }
 
+    .quick-actions {
+        margin: 20px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .btn-action {
+        padding: 10px 18px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        background: var(--surface);
+        color: var(--text);
+        box-shadow: var(--shadow-sm);
+    }
+    .btn-action-primary { background: linear-gradient(135deg,#ff6b35,#f7931e); color: #fff; }
+
     .alert-item {
         padding: 15px;
         background: var(--surface);
@@ -250,6 +272,14 @@
         <div class="stat-card-title">Permintaan Raider Disetujui</div>
         <div class="stat-card-value">{{ $permintaanPercentAll }}%</div>
     </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <a href="{{ route('produk.create') }}" class="btn-action btn-action-primary">
+        <i class="fas fa-plus"></i>
+        Tambah Produk
+    </a>
 </div>
 
 <!-- Content Grid -->

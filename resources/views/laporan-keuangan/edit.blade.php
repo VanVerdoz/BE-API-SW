@@ -55,7 +55,10 @@
         padding: 30px;
         border-radius: 20px;
         box-shadow: var(--shadow-sm);
-        max-width: 600px;
+        max-width: 100%;
+        width: 100%;
+        min-height: calc(100vh - 160px);
+        padding-bottom: 160px;
         border: 1px solid var(--border);
         color: var(--text);
     }
@@ -109,8 +112,9 @@
         margin-top: 30px;
     }
 
-    select.form-control {
-        cursor: pointer;
+    select.form-control { cursor: pointer; }
+    @media (max-width: 768px) {
+        .form-container { padding: 20px; border-radius: 16px; min-height: auto; padding-bottom: 80px; }
     }
 </style>
 @endpush
@@ -192,3 +196,5 @@
     </form>
 </div>
 @endsection
+
+

@@ -69,6 +69,7 @@
         box-shadow: var(--shadow-sm);
         border: 1px solid var(--border);
         color: var(--text);
+        overflow: hidden;
     }
 
     .chart-title {
@@ -80,8 +81,42 @@
     .dark .chart-title { color: var(--text); }
 
     .chart-canvas {
-        height: 350px;
+        height: 420px;
     }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+        margin-top: 20px;
+    }
+    .action-card {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 20px;
+        border-radius: 18px;
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        border: none;
+    }
+    .action-card.primary { background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+    .action-card.secondary { background: linear-gradient(135deg, #374151 0%, #1f2937 100%); }
+    .action-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 auto;
+    }
+    .action-content { display: flex; flex-direction: column; }
+    .action-title { font-size: 16px; font-weight: 700; }
+    .action-desc { font-size: 12px; opacity: 0.9; }
+    @media (max-width: 640px) { .chart-canvas { height: 320px; } }
 </style>
 @endpush
 
@@ -122,6 +157,24 @@
     <div class="chart-canvas">
         <canvas id="salesChart"></canvas>
     </div>
+</div>
+
+<!-- Quick Create -->
+<div class="action-grid">
+    <a href="{{ route('laporan-keuangan.create') }}" class="action-card primary">
+        <div class="action-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+        <div class="action-content">
+            <div class="action-title">Tambah Laporan Keuangan</div>
+            <div class="action-desc">Buat laporan periode terbaru</div>
+        </div>
+    </a>
+    <a href="{{ route('pengguna.create') }}" class="action-card secondary">
+        <div class="action-icon"><i class="fas fa-user-plus"></i></div>
+        <div class="action-content">
+            <div class="action-title">Tambah Pengguna</div>
+            <div class="action-desc">Tambahkan akun admin atau staf</div>
+        </div>
+    </a>
 </div>
 @endsection
 

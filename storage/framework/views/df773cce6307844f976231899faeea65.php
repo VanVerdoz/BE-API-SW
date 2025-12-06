@@ -169,6 +169,10 @@
 
 <!-- Quick Actions -->
 <div class="quick-actions">
+    <a href="<?php echo e(route('produk.create')); ?>" class="btn-action btn-action-primary">
+        <i class="fas fa-plus"></i>
+        Tambah Produk
+    </a>
     <a href="<?php echo e(route('raider.permintaan-stok.create')); ?>" class="btn-action btn-action-primary">
         <i class="fas fa-box-open"></i>
         Request Stok Produk

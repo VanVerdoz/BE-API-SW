@@ -53,7 +53,10 @@
         padding: 30px;
         border-radius: 20px;
         box-shadow: var(--shadow-sm);
-        max-width: 600px;
+        max-width: 100%;
+        width: 100%;
+        min-height: calc(100vh - 160px);
+        padding-bottom: 160px;
         border: 1px solid var(--border);
         color: var(--text);
     }
@@ -110,12 +113,10 @@
         .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
         .form-actions { flex-direction: column; gap: 8px; }
         .form-actions .btn { display: block; width: 100%; }
-        .form-container { padding: 16px; border-radius: 16px; }
+        .form-container { padding: 20px; border-radius: 16px; min-height: auto; padding-bottom: 80px; }
     }
 
-    select.form-control {
-        cursor: pointer;
-    }
+    select.form-control { cursor: pointer; }
 </style>
 <?php $__env->stopPush(); ?>
 
@@ -252,5 +253,6 @@ unset($__errorArgs, $__bag); ?>
     </form>
 </div>
 <?php $__env->stopSection(); ?>
+
 
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\RplBo\Be FIx\resources\views/laporan-keuangan/create.blade.php ENDPATH**/ ?>

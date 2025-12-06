@@ -171,6 +171,10 @@
 
 <!-- Quick Actions -->
 <div class="quick-actions">
+    <a href="{{ route('produk.create') }}" class="btn-action btn-action-primary">
+        <i class="fas fa-plus"></i>
+        Tambah Produk
+    </a>
     <a href="{{ route('raider.permintaan-stok.create') }}" class="btn-action btn-action-primary">
         <i class="fas fa-box-open"></i>
         Request Stok Produk

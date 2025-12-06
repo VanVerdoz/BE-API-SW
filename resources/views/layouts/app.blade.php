@@ -72,7 +72,11 @@
             overflow-y: auto;
             box-shadow: 4px 0 16px rgba(0, 0, 0, 0.08);
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
         }
+        .sidebar::-webkit-scrollbar { width: 0 !important; height: 0 !important; display: none; }
+        .sidebar { scrollbar-width: none; }
         .dark .sidebar { background: #0c1118; }
 
         .sidebar-logo {
@@ -107,6 +111,7 @@
         .sidebar-menu {
             list-style: none;
             padding: 0 10px;
+            flex: 1 1 auto;
         }
 
         .sidebar-menu li {
@@ -116,7 +121,7 @@
         .sidebar-menu a {
             display: flex;
             align-items: center;
-            padding: 15px 20px;
+            padding: 12px 16px;
             color: white;
             text-decoration: none;
             border-radius: 15px;
@@ -143,10 +148,8 @@
         }
 
         .sidebar-user {
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            right: 0;
+            position: static;
+            margin-top: auto;
             padding: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
         }
@@ -155,6 +158,7 @@
         .sidebar-user-info {
             display: flex;
             align-items: center;
+            gap: 8px;
             margin-bottom: 15px;
         }
 
@@ -174,14 +178,21 @@
             font-size: 20px;
         }
 
+        .sidebar-user-details { min-width: 0; }
         .sidebar-user-details h4 {
             font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
             margin-bottom: 3px;
+            white-space: normal;
+            word-break: break-word;
         }
 
         .sidebar-user-details p {
             font-size: 12px;
             opacity: 0.8;
+            line-height: 1.2;
+            margin: 0;
         }
 
         .btn-logout {
@@ -678,7 +689,7 @@
                             <i class="fas fa-user"></i>
                         </div>
                         <div class="header-user-info">
-                            <h4>{{ $user['nama'] ?? 'Admin' }}</h4>
+                            <h4>{{ $user['nama_lengkap'] ?? $user['username'] ?? 'Admin' }}</h4>
                             <p>{{ ucfirst(str_replace('_', ' ', $role)) }}</p>
                         </div>
                     </div>

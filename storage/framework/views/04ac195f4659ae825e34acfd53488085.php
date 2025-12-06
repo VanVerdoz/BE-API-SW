@@ -7,7 +7,10 @@
         border-radius: 20px;
         padding: 30px;
         box-shadow: var(--shadow-md);
-        max-width: 600px;
+        max-width: 100%;
+        width: 100%;
+        min-height: calc(100vh - 160px);
+        padding-bottom: 160px;
         border: 1px solid var(--border);
         color: var(--text);
     }
@@ -37,8 +40,8 @@
 
     .form-control:focus {
         outline: none;
-        border-color: #ff6b35;
-        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
     }
 
     .form-actions {
@@ -47,7 +50,7 @@
         margin-top: 30px;
     }
     @media (max-width: 768px) {
-        .form-container { padding: 16px; border-radius: 16px; }
+        .form-container { padding: 20px; border-radius: 16px; min-height: auto; padding-bottom: 80px; }
         .form-actions { flex-direction: column; gap: 8px; }
         .form-actions .btn { display: block; width: 100%; }
     }
